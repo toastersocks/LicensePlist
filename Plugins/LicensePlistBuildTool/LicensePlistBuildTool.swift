@@ -33,15 +33,18 @@ extension LicensePlistBuildTool: XcodeBuildToolPlugin {
 
         // Output directory inside build output directory
         let outputDirectoryPath = context.pluginWorkDirectoryURL.appending(component: "com.mono0926.LicensePlist.Output")
+        Diagnostics.remark("OUTPUT DIRECTORY: \(outputDirectoryPath.path)")
         try fileManager.createDirectory(atPath: outputDirectoryPath.path, withIntermediateDirectories: true)
 
         return [
             .prebuildCommand(displayName: "LicensePlist is processing licenses...",
                              executable: licensePlist.url,
-                             arguments: ["--sandbox-mode",
-                                         "--config-path", configPath.path,
-                                         "--package-sources-path", packageSourcesPath.path,
-                                         "--output-path", outputDirectoryPath.path],
+                             arguments: [
+                                "--sandbox-mode",
+                                "--config-path", configPath.path,
+                                "--package-sources-path", packageSourcesPath.path,
+                                "--output-path", outputDirectoryPath.path
+                             ],
                              outputFilesDirectory: context.pluginWorkDirectoryURL)
         ]
     }

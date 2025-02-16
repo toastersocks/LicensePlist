@@ -117,6 +117,7 @@ struct PlistInfo {
     }
 
     func outputPlist() {
+        Log.error("MARKDOWN PATH: \(options.markdownPath)")
         guard let licenses = licenses else { preconditionFailure() }
         let outputPath = options.outputPath
         let itemsPath = outputPath.appendingPathComponent(options.prefix)
@@ -132,6 +133,11 @@ struct PlistInfo {
         holder.write(to: outputPath.appendingPathComponent("\(options.prefix).plist"), itemsPath: itemsPath)
 
         if let markdownPath = options.markdownPath {
+            var markdownPath = markdownPath
+
+            if options.config.sandboxMode {
+                markdownPath = options.outputPath.deletingLastPathComponent().appendingPathComponent(markdownPath.path)
+            }
             let markdownHolder = LicenseMarkdownHolder.load(licenses: licenses, options: options)
             markdownHolder.write(to: markdownPath)
         }
@@ -170,7 +176,7 @@ struct PlistInfo {
             fatalError("summary should be set")
         }
         do {
-            try summary.write(to: summaryPath, atomically: true, encoding: Consts.encoding)
+            try summary.write(to: summaryPath, atomically: false, encoding: Consts.encoding)
         } catch let e {
             Log.error("Failed to save summary. Error: \(String(describing: e))")
         }

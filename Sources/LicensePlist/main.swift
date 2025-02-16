@@ -101,6 +101,7 @@ struct LicensePlist: ParsableCommand {
     func run() throws {
         Logger.configure(logLevel: logLevel, colorCommandLineFlag: color)
 
+        Log.info("RUNNING")
         let config = getConfig()
         let cartfilePath = cartfilePath.asPathURL(other: config.options.cartfilePath, default: Consts.cartfileName)
         let mintfilePath = mintfilePath.asPathURL(other: config.options.mintfilePath, default: Consts.mintfileName)
